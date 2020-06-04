@@ -1,29 +1,26 @@
 module.exports = (connection, Sequelize) => {
-  class User extends Sequelize.Model {}
-  User.init(
+  class Meme extends Sequelize.Model {}
+  Meme.init(
     {
       _id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV1,
         primaryKey: true,
       },
-      username: {
+      desc: {
         type: Sequelize.STRING,
       },
-      password: {
+      author: {
         type: Sequelize.STRING,
       },
-      dataIv: {
+      category: {
         type: Sequelize.STRING,
       },
-      role: {
-        type: Sequelize.NUMBER(1),
+      created_on_time: {
+        type: Sequelize.NUMBER(4),
       },
     },
     { sequelize: connection }
   );
-  User.associate = (models) => {
-    User.belongsToMany(models.Meme, { through: "UserMemes" });//change this
-  };
-  return User;
+  return Meme;
 };
