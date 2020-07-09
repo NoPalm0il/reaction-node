@@ -8,17 +8,20 @@ const options = process.env.MONGO_CERT
       useUnifiedTopology: true,
     }
   : { useUnifiedTopology: true };
-const mongodb = new MongoClient(process.env.MONGO_URI, options);
+
+const client = new MongoClient(process.env.MONGO_URI, options);
 
 const connectDB = () => {
   return new Promise((resolve, reject) => {
-    mongodb.connect((err) => {
+    client.connect((err) => {
       if (err) reject(err);
       else resolve();
     });
   });
 };
-const getDB = () => mongodb.db("lessons");
-const disconnectDB = () => _db.close();
+
+const getDB = () => client.db("memes");
+
+const disconnectDB = () => client.close();
 
 module.exports = { connectDB, getDB, disconnectDB };
