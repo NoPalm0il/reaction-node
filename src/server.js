@@ -1,9 +1,6 @@
 require("dotenv").config();
 
-//const store = require("./configs/minio.js");
 const db = require("./configs/mongodb.js");
-
-/*, store.connectStorage()*/
 
 Promise.all([db.connectDB()])
   .then(() => {
