@@ -15,7 +15,7 @@ exports.register = (username, rawPassword, role) => {
                 const dataIv = cipher.generateIv();
                 const password = cipher.encrypt(rawPassword, dataIv);
                 db.collection("users")
-                  .insertOne({ username, password, role, dataIv, books: [] })
+                  .insertOne({ username, password, role, dataIv, memes: [] })
                   .then(() => resolve())
                   .catch((error) => reject(error.message));
               } else reject("invalid password");

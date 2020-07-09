@@ -23,7 +23,7 @@ module.exports = (connection, Sequelize) => {
     { sequelize: connection }
   );
   User.associate = (models) => {
-    User.belongsToMany(models.Meme, { through: "UserMemes" });//change this
+    User.belongsToMany(models.Meme, { through: "UserMemes" });
   };
   return User;
 };
