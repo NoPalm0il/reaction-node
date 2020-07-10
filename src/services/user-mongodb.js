@@ -9,18 +9,27 @@ exports.register = (username, email, rawPassword, role) => {
       db.collection("users")
         .findOne({ username: username, email: email })
         .then((found) => {
-          if (!found) {
-            //if (Object.values(roles).indexOf(role) > -1) {
+          if (found != null) {
+            if (!found) {
+              //if (Object.values(roles).indexOf(role) > -1) {
               //if (/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d$@$!%*#?&-.]{8,}$/.test(rawPassword)) {
-                const dataIv = cipher.generateIv();
-                const password = cipher.encrypt(rawPassword, dataIv);
-                db.collection("users")
-                  .insertOne({ username, email, password, role, dataIv, memes: [] })
-                  .then(() => resolve())
-                  .catch((error) => reject(error.message));
+              const dataIv = cipher.generateIv();
+              const password = cipher.encrypt(rawPassword, dataIv);
+              db.collection("users")
+                .insertOne({
+                  username,
+                  email,
+                  password,
+                  role,
+                  dataIv,
+                  memes: [],
+                })
+                .then(() => resolve())
+                .catch((error) => reject(error.message));
               //} else reject("invalid password");
-            //} else reject("invalid role, input role = " + role);
-          } else reject("username or email already in use");
+              //} else reject("invalid role, input role = " + role);
+            } else reject("username or email already in use");
+          } else reject("insert a username and email");
         })
         .catch((error) => reject(error.message));
     } catch (error) {
@@ -29,16 +38,17 @@ exports.register = (username, email, rawPassword, role) => {
   });
 };
 
-exports.authenticate = (email, rawPassword) => {
+exports.authenticate = (username, rawPassword) => {
   return new Promise((resolve, reject) => {
     db.collection("users")
-      .findOne({ email: email })
+      .findOne({ username: username })
       .then((user) => {
         if (user) {
           const password = cipher.decrypt(user.password, user.dataIv);
-          if (password == rawPassword) resolve({ _id: user._id, role: user.role });
+          if (password == rawPassword)
+            resolve({ _id: user._id, role: user.role });
         }
-        reject(new Error("email and password don't match"));
+        reject(new Error("username and password don't match"));
       })
       .catch((error) => reject(error));
   });
