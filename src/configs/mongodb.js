@@ -13,6 +13,6 @@ const connectDB = () => {
 
 const getDB = () => client.db("maindb");
 
-const disconnectDB = () => client.close();
+const disconnectDB = () => _client.close();
 
 module.exports = { connectDB, getDB, disconnectDB };

@@ -1,4 +1,4 @@
 module.exports = {
-  Boss: 1,
-  Servant: 2,
+  Mod: 1,
+  User: 2,
 };
