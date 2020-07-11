@@ -9,27 +9,25 @@ exports.register = (username, email, rawPassword, role) => {
       db.collection("users")
         .findOne({ username: username, email: email })
         .then((found) => {
-          if (found != null) {
-            if (!found) {
-              //if (Object.values(roles).indexOf(role) > -1) {
-              //if (/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d$@$!%*#?&-.]{8,}$/.test(rawPassword)) {
-              const dataIv = cipher.generateIv();
-              const password = cipher.encrypt(rawPassword, dataIv);
-              db.collection("users")
-                .insertOne({
-                  username,
-                  email,
-                  password,
-                  role,
-                  dataIv,
-                  memes: [],
-                })
-                .then(() => resolve())
-                .catch((error) => reject(error.message));
-              //} else reject("invalid password");
-              //} else reject("invalid role, input role = " + role);
-            } else reject("username or email already in use");
-          } else reject("insert a username and email");
+          if (!found) {
+            //if (Object.values(roles).indexOf(role) > -1) {
+            //if (/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d$@$!%*#?&-.]{8,}$/.test(rawPassword)) {
+            const dataIv = cipher.generateIv();
+            const password = cipher.encrypt(rawPassword, dataIv);
+            db.collection("users")
+              .insertOne({
+                username,
+                email,
+                password,
+                role,
+                dataIv,
+                memes: [],
+              })
+              .then(() => resolve())
+              .catch((error) => reject(error.message));
+            //} else reject("invalid password");
+            //} else reject("invalid role, input role = " + role);
+          } else reject("username or email already in use");
         })
         .catch((error) => reject(error.message));
     } catch (error) {
