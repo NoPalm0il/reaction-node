@@ -1,5 +1,5 @@
 const memeService = require("../services/meme-mongodb.js");
-const formidable = require("formidable");
+//const formidable = require("formidable");
 
 exports.getMemes = (req, res) => {
   memeService
@@ -9,7 +9,7 @@ exports.getMemes = (req, res) => {
 };
 exports.getMeme = (req, res) => {
   memeService
-    .getMemes(req.params.id)
+    .getMeme(req.params.id)
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };

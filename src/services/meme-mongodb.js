@@ -24,7 +24,7 @@ exports.getMeme = (id) => {
       .catch((err) => reject(err));
   });
 };
-exports.insertMemes = (body) => {
+exports.insertMeme = (body) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
       .insertOne({
