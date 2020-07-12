@@ -7,6 +7,12 @@ exports.getMemes = (req, res) => {
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
+exports.getMeme = (req, res) => {
+  memeService
+    .getMemes(req.params.id)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
 exports.insertMeme = (req, res) => {
   memeService
     .insertMeme(req.body)

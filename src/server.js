@@ -19,7 +19,7 @@ Promise.all([db.connectDB()])
     app.use(bodyParser.json());
     app.use(cors());
 
-    //app.use("/meme", require("./routes/meme-route.js"));
+    app.use("/meme", require("./routes/meme-route.js"));
     app.use("/user", require("./routes/user-route.js"));
 
     app.use("/", express.static(path.join(__dirname, "..", "react")));
