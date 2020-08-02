@@ -1,24 +1,34 @@
 const memeService = require("../services/meme-mongodb.js");
 //const formidable = require("formidable");
 
-exports.getMemes = (req, res) => {
+exports.getQueryMemes = (req, res) => {
   memeService
-    .getMemes(req.query)
+    .getQueryMemes(req.query)
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
+
+exports.getMemes = (req, res) => {
+  memeService
+    .getMemes()
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
+
 exports.getMeme = (req, res) => {
   memeService
     .getMeme(req.params.id)
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
+
 exports.insertMeme = (req, res) => {
   memeService
     .insertMeme(req.body)
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
+
 exports.updateMeme = (req, res) => {
   memeService
     .updateMeme(req.params.id, req.body)

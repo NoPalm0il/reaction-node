@@ -1,6 +1,6 @@
 const jwt = require("../helpers/jwt.js");
 
-module.exports = (...roles) => {
+module.exports = () => {
   return (req, res, next) => {
     if (req.headers.authorization) {
       jwt

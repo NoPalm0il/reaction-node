@@ -2,7 +2,7 @@ const db = require("../configs/mongodb.js").getDB();
 //const store = require("../configs/minio.js");
 const ObjectId = require("mongodb").ObjectID;
 
-exports.getMemes = (queryString) => {
+exports.getQueryMemes = (queryString) => {
   return new Promise((resolve, reject) => {
     let filter = {};
     if (queryString.search) {
@@ -10,12 +10,23 @@ exports.getMemes = (queryString) => {
     }
     db.collection("memes")
       .find(filter)
-      .project({ title: 1, author: 1 })
+      //.project({ title: 1, author: 1 })
       .toArray()
       .then((memes) => resolve(memes))
       .catch((err) => reject(err));
   });
 };
+
+exports.getMemes = () => {
+  return new Promise((resolve, reject) => {
+    db.collection("memes")
+      .find()
+      .toArray()
+      .then((memes) => resolve(memes))
+      .catch((err) => reject(err));
+  });
+};
+
 exports.getMeme = (id) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
@@ -24,6 +35,7 @@ exports.getMeme = (id) => {
       .catch((err) => reject(err));
   });
 };
+
 exports.insertMeme = (body) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
