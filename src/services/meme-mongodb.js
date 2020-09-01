@@ -44,6 +44,7 @@ exports.insertMeme = (body) => {
         category: body.category,
         author: body.author,
         publish: body.publish,
+        votes: body.votes
       })
       .then((res) => resolve({ inserted: 1, _id: res.insertedId }))
       .catch((err) => reject(err));
