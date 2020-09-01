@@ -9,10 +9,11 @@ exports.getQueryMemes = (queryString) => {
       filter.title = { $regex: new RegExp(queryString.search, "i") };
     }
     db.collection("memes")
-      .find(filter)
+      .find({author: queryString.search})
       //.project({ title: 1, author: 1 })
       .toArray()
-      .then((memes) => resolve(memes))
+      .then((memes) => {resolve(memes);
+      console.log(queryString.search + "  " + filter)})
       .catch((err) => reject(err));
   });
 };
