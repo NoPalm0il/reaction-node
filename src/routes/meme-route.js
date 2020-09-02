@@ -7,6 +7,7 @@ router.get("/data/qry", authorize(), memeController.getQueryMemes);
 router.get("/data/list", memeController.getMemes);
 router.post("", authorize(), memeController.insertMeme);
 router.put("/data/:id", authorize(), memeController.updateMeme);
+router.put("/memage/:id", authorize(), memeController.updateMemage);
 router.delete("/data/:id", authorize(), memeController.removeMeme);
 
 module.exports = router;

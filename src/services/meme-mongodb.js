@@ -1,5 +1,5 @@
 const db = require("../configs/mongodb.js").getDB();
-//const store = require("../configs/minio.js");
+const storage = require("../configs/minio.js");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.getQueryMemes = (queryString) => {
@@ -71,23 +71,22 @@ exports.updateMeme = (id, body) => {
   });
 };
 
-/*
-exports.updateBookCover = (id, file) => {
+exports.updateMemage = (id, file) => {
   return new Promise((resolve, reject) => {
     let url = "";
-    db.collection("books")
+    db.collection("memes")
       .findOne({ _id: ObjectId(id) })
-      .then((book) => {
-        let promises = [store.uploadFile(file.path, file.type)];
-        if (book.cover) {
-          const aux = book.cover.split("?")[0].split("/");
-          promises.push(store.removeFile(aux[aux.length - 1]));
+      .then((meme) => {
+        let promises = [storage.uploadFile(file.path, file.type)];
+        if (meme.memage) {
+          const aux = meme.memage.split("?")[0].split("/");
+          promises.push(storage.removeFile(aux[aux.length - 1]));
         }
         return Promise.all(promises);
       })
       .then(([presignedUrl, deleted]) => {
         url = presignedUrl;
-        return db.collection("books").updateOne({ _id: ObjectId(id) }, { $set: { cover: presignedUrl } });
+        return db.collection("memes").updateOne({ _id: ObjectId(id) }, { $set: { memage: presignedUrl } });
       })
       .then(() => {
         resolve({ updated: 1, url });
@@ -95,7 +94,6 @@ exports.updateBookCover = (id, file) => {
       .catch((err) => reject(err));
   });
 };
-*/
 
 exports.removeMeme = (id) => {
   return new Promise((resolve, reject) => {

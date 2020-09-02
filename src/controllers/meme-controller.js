@@ -1,5 +1,5 @@
 const memeService = require("../services/meme-mongodb.js");
-//const formidable = require("formidable");
+const formidable = require("formidable");
 
 exports.getQueryMemes = (req, res) => {
   memeService
@@ -36,20 +36,18 @@ exports.updateMeme = (req, res) => {
     .catch((err) => res.status(500).send(err.message));
 };
 
-/*
-exports.updateBookCover = (req, res) => {
+exports.updateMemage = (req, res) => {
   formidable().parse(req, (err, fields, files) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
-      bookService
-        .updateBookCover(req.params.id, files.cover)
+      memeService
+        .updateMemage(req.params.id, files.memage)
         .then((result) => res.json(result))
         .catch((err) => res.status(500).send(err.message));
     }
   });
 };
-*/
 
 exports.removeMeme = (req, res) => {
   memeService
