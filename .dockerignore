@@ -1,0 +1,11 @@
+node_modules
+react
+.git
+.vscode
+yarn.lock
+.dockerignore
+.gitignore
+*.log
+Dockerfile*
+README.md
+LICENSE
