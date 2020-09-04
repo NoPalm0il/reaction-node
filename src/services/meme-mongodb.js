@@ -63,6 +63,7 @@ exports.updateMeme = (id, body) => {
             category: body.category,
             author: body.author,
             publish: body.publish,
+            votes: body.votes,
           },
         }
       )
