@@ -1,6 +1,7 @@
 const db = require("../configs/mongodb.js").getDB();
 const storage = require("../configs/minio.js");
 const ObjectId = require("mongodb").ObjectID;
+const userService = require("./user-mongodb.js");
 
 exports.getQueryMemes = (queryString) => {
   return new Promise((resolve, reject) => {
@@ -9,11 +10,12 @@ exports.getQueryMemes = (queryString) => {
       filter.title = { $regex: new RegExp(queryString.search, "i") };
     }
     db.collection("memes")
-      .find({author: queryString.search})
-      //.project({ title: 1, author: 1 })
+      .find({ author: queryString.search })
       .toArray()
-      .then((memes) => {resolve(memes);
-      console.log(queryString.search + "  " + filter)})
+      .then((memes) => {
+        resolve(memes);
+        console.log(queryString.search + "  " + filter);
+      })
       .catch((err) => reject(err));
   });
 };
@@ -22,6 +24,22 @@ exports.getMemes = () => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
       .find()
+      .toArray()
+      .then((memes) => resolve(memes))
+      .catch((err) => reject(err));
+  });
+};
+
+exports.getMemesArr = (ids) => {
+  return new Promise((resolve, reject) => {
+    let objids = [];
+
+    ids.forEach(element => {
+      objids.push(ObjectId(element))
+    });
+
+    db.collection("memes")
+      .find({_id: { $in : objids}})
       .toArray()
       .then((memes) => resolve(memes))
       .catch((err) => reject(err));
@@ -45,9 +63,12 @@ exports.insertMeme = (body) => {
         category: body.category,
         author: body.author,
         publish: body.publish,
-        votes: body.votes
+        votes: body.votes,
       })
-      .then((res) => resolve({ inserted: 1, _id: res.insertedId }))
+      .then((res) => {
+        userService.addUserMeme(body.author, res.insertedId);
+        resolve({ inserted: 1, _id: res.insertedId });
+      })
       .catch((err) => reject(err));
   });
 };
@@ -72,6 +93,37 @@ exports.updateMeme = (id, body) => {
   });
 };
 
+exports.incMemeVotes = (id, body) => {
+  return new Promise((resolve, reject) => {
+    db.collection("memes")
+      .updateOne({ _id: ObjectId(id) }, { $inc : { votes: 1 }, $push : { whoLiked: body.username} })
+      .then(() => {
+        userService.addUserLikedMeme(body.username, id);
+        resolve({ updated: 1 })})
+      .catch((err) => reject(err));
+  });
+};
+
+exports.decMemeVotes = (id, body) => {
+  return new Promise((resolve, reject) => {
+    db.collection("memes")
+      .updateOne({ _id: ObjectId(id) }, { $inc: { votes: -1 }, $pull : { whoLiked: body.username} })
+      .then(() => {
+        userService.removeUserLikedMeme(body.username, id);
+        resolve({ updated: 1 })})
+      .catch((err) => reject(err));
+  });
+};
+
+exports.getMemeVotes = (id) => {
+  return new Promise((resolve, reject) => {
+    db.collection("memes")
+      .findOne({ _id: ObjectId(id) })
+      .then((meme) => resolve(meme.votes))
+      .catch((err) => reject(err));
+  });
+};
+
 exports.updateMemage = (id, file) => {
   return new Promise((resolve, reject) => {
     let url = "";
@@ -87,7 +139,9 @@ exports.updateMemage = (id, file) => {
       })
       .then(([presignedUrl, deleted]) => {
         url = presignedUrl;
-        return db.collection("memes").updateOne({ _id: ObjectId(id) }, { $set: { memage: presignedUrl } });
+        return db
+          .collection("memes")
+          .updateOne({ _id: ObjectId(id) }, { $set: { memage: presignedUrl } });
       })
       .then(() => {
         resolve({ updated: 1, url });

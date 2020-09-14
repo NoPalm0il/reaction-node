@@ -7,6 +7,7 @@ exports.register = (req, res) => {
     .then(() => res.status(200).json({ success: true }))
     .catch((message) => res.status(500).send(message));
 };
+
 exports.login = (req, res) => {
   userService
     .authenticate(req.body.username, req.body.password)
@@ -15,23 +16,30 @@ exports.login = (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 };
 
-/*
-exports.getBooks = (req, res) => {
+exports.getUserMemes = (req, res) => {
   userService
-    .getBooks(req.client, req.query)
-    .then((result) => res.json(result))
-    .catch((err) => res.status(500).send(err.message));
-};
-exports.addBook = (req, res) => {
+    .getUserMemes(req.params.username)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send(error.message + " get user memes " + req.params.username));
+}
+
+exports.addUserLikedMeme = (req, res) => {
   userService
-    .addBook(req.client, req.params.id)
-    .then(() => res.json({ success: true }))
-    .catch((err) => res.status(500).send(err.message));
-};
-exports.removeBook = (req, res) => {
+    .addUserLikedMeme(req.body.username, req.params.id)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send(error.message));
+}
+
+exports.removeUserLikedMeme = (req, res) => {
   userService
-    .removeBook(req.client, req.params.id)
-    .then(() => res.json({ success: true }))
-    .catch((err) => res.status(500).send(err.message));
-};
-*/
+    .removeUserLikedMeme(req.body.username, req.params.id)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send(error.message));
+}
+
+exports.isUserLikedMeme = (req, res) => {
+  userService
+    .isUserLikedMeme(req.body.username, req.params.id)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send(error.message));
+}

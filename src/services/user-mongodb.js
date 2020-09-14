@@ -1,7 +1,8 @@
 const db = require("../configs/mongodb").getDB();
 const cipher = require("../helpers/cipher");
 const roles = require("../helpers/roles");
-//const ObjectId = require("mongodb").ObjectID;
+const ObjectId = require("mongodb").ObjectID;
+const memeService = require("./meme-mongodb.js");
 
 exports.register = (username, email, rawPassword, role) => {
   return new Promise((resolve, reject) => {
@@ -52,38 +53,90 @@ exports.authenticate = (username, rawPassword) => {
   });
 };
 
-/*
-exports.getBooks = (userId) => {
+exports.addUserMeme = (username, memeid) => {
   return new Promise((resolve, reject) => {
     db.collection("users")
-      .findOne({ _id: ObjectId(userId) })
+      .updateOne({ username: username }, { $push: { memes: ObjectId(memeid) } })
+      .then(() => resolve({ updated: 1 }))
+      .catch((error) => {
+        console.error(error.message);
+        reject(error.message);
+      });
+  });
+};
+
+exports.removeUserMeme = (username, memeid) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .updateOne({ username: username }, { $pull: { memes: ObjectId(memeid) } })
+      .then(() => resolve({ updated: 1 }))
+      .catch((error) => {
+        console.error(error.message);
+        reject(error.message);
+      });
+  });
+};
+
+exports.getUserMemes = (username) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .findOne({ username: username })
+      .then((user) => resolve(user.memes))
+      .catch((error) => {
+        console.error(error.message);
+        reject(error.message);
+      });
+  });
+};
+
+exports.addUserLikedMeme = (username, memeid) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .updateOne(
+        { username: username },
+        { $push: { liked_memes: ObjectId(memeid) } }
+      )
+      .then(() => resolve({ updated: 1 }))
+      .catch((error) => {
+        console.error(error.message);
+        reject(error.message);
+      });
+  });
+};
+
+exports.removeUserLikedMeme = (username, memeid) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .updateOne(
+        { username: username },
+        { $pull: { liked_memes: ObjectId(memeid) } }
+      )
+      .then(() => resolve({ removed: 1 }))
+      .catch((error) => {
+        console.error(error.message);
+        reject(error.message);
+      });
+  });
+};
+
+// does the user likes that meme?
+exports.isUserLikedMeme = (username, memeid) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .findOne({ username: username })
       .then((user) => {
-        if (user.books) {
-          return db
-            .collection("books")
-            .find({ _id: { $in: user.books } })
-            .project({ title: 1, author: 1 })
-            .toArray();
-        } else return [];
+        try {
+          if (!user.liked_memes[0]) resolve({ isLiked: false });
+        } catch (exc) {
+          resolve({ isLiked: false });
+          console.error("no memes");
+        } finally {
+          user.liked_memes.forEach((element) => {
+            if (element == memeid) resolve({ isLiked: true });
+          });
+          resolve({ isLiked: false });
+        }
       })
-      .then((books) => resolve(books))
-      .catch((err) => reject(err));
+      .catch((error) => reject(error.message));
   });
 };
-exports.addBook = (userId, bookId) => {
-  return new Promise((resolve, reject) => {
-    db.collection("users")
-      .updateOne({ _id: ObjectId(userId) }, { $push: { books: ObjectId(bookId) } })
-      .then(() => resolve())
-      .catch((err) => reject(err));
-  });
-};
-exports.removeBook = (userId, bookId) => {
-  return new Promise((resolve, reject) => {
-    db.collection("users")
-      .updateOne({ _id: ObjectId(userId) }, { $pull: { books: ObjectId(bookId) } })
-      .then(() => resolve())
-      .catch((err) => reject(err));
-  });
-};
-*/

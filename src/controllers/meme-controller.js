@@ -15,6 +15,13 @@ exports.getMemes = (req, res) => {
     .catch((err) => res.status(500).send(err.message));
 };
 
+exports.getMemesArr = (req, res) => {
+  memeService
+    .getMemesArr(req.body.memes)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
+
 exports.getMeme = (req, res) => {
   memeService
     .getMeme(req.params.id)
@@ -32,6 +39,27 @@ exports.insertMeme = (req, res) => {
 exports.updateMeme = (req, res) => {
   memeService
     .updateMeme(req.params.id, req.body)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
+
+exports.incMemeVotes = (req, res) => {
+  memeService
+    .incMemeVotes(req.params.id, req.body)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
+
+exports.decMemeVotes = (req, res) => {
+  memeService
+    .decMemeVotes(req.params.id, req.body)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};
+
+exports.getMemeVotes = (req, res) => {
+  memeService
+    .getMemeVotes(req.params.id, req.body)
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
