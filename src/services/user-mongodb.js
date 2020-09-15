@@ -140,3 +140,14 @@ exports.isUserLikedMeme = (username, memeid) => {
       .catch((error) => reject(error.message));
   });
 };
+
+exports.getLikedMemes = (username) => {
+  return new Promise((resolve, reject) => {
+    db.collection("users")
+      .findOne({ username: username })
+      .then((user) => {
+        resolve({ liked_memes: user.liked_memes})
+      })
+      .catch((err) => reject(err.message))
+  })
+}

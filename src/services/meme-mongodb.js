@@ -150,6 +150,7 @@ exports.updateMemage = (id, file) => {
   });
 };
 
+//TODO: remove minio object, remove presign url returns object name, remove the like id on all users who liked the deleted meme
 exports.removeMeme = (id) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")

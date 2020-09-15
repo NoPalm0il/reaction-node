@@ -1,6 +1,15 @@
 const MongoClient = require("mongodb").MongoClient;
 
-const client = new MongoClient(process.env.MONGO_URI, { useUnifiedTopology: true });
+const options = process.env.MONGO_CERT
+  ? {
+      ssl: true,
+      sslValidate: true,
+      sslCA: [Buffer.from(process.env.MONGO_CERT, "base64")],
+      useUnifiedTopology: true,
+    }
+  : { useUnifiedTopology: true };
+
+const client = new MongoClient(process.env.MONGO_URI, options);
 
 const connectDB = () => {
   return new Promise((resolve, reject) => {

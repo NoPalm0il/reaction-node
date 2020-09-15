@@ -7,11 +7,7 @@ router.post("/login", userController.login);
 router.get("/getMemes/:username", authorize(), userController.getUserMemes);
 router.put("/addLike/:id", authorize(), userController.addUserLikedMeme);
 router.put("/removeLike/:id", authorize(), userController.removeUserLikedMeme);
-router.post("/memeLiked/:id", userController.isUserLikedMeme);
+router.post("/memeLiked/:id", authorize(), userController.isUserLikedMeme);
+router.get("/getLikedMemes/:username", userController.getLikedMemes);
 
-/*
-router.get("/book", authorize(), userController.getBooks);
-router.post("/book/:id", authorize(), userController.addBook);
-router.delete("/book/:id", authorize(), userController.removeBook);
-*/
 module.exports = router;

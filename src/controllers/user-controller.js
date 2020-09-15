@@ -43,3 +43,10 @@ exports.isUserLikedMeme = (req, res) => {
     .then((data) => res.json(data))
     .catch((error) => res.status(500).send(error.message));
 }
+
+exports.getLikedMemes = (req, res) => {
+  userService
+    .getLikedMemes(req.params.username)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send(error.message));
+}
