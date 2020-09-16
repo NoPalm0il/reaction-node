@@ -8,6 +8,13 @@ exports.getQueryMemes = (req, res) => {
     .catch((err) => res.status(500).send(err.message));
 };
 
+exports.getCategoryMemes = (req, res) => {
+  memeService
+  .getCategoryMemes(req.params.category)
+  .then((result) => res.json(result))
+  .catch((err) => res.status(500).send(err.message));
+};
+
 exports.getMemes = (req, res) => {
   memeService
     .getMemes()

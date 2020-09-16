@@ -20,6 +20,16 @@ exports.getQueryMemes = (queryString) => {
   });
 };
 
+exports.getCategoryMemes = (category) => {
+  return new Promise((resolve, reject) => {
+      db.collection("memes")
+      .find({ category: category })
+      .toArray()
+      .then((memes) => resolve(memes))
+      .catch((err) => reject(err));
+  });
+};
+
 exports.getMemes = () => {
   return new Promise((resolve, reject) => {
     db.collection("memes")

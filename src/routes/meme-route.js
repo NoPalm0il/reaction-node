@@ -3,6 +3,7 @@ const router = require("express").Router();
 const authorize = require("../configs/authorization");
 
 router.get("/:id", authorize(), memeController.getMeme);
+router.get("/cat/:category", memeController.getCategoryMemes);
 router.get("/data/qry", authorize(), memeController.getQueryMemes);
 router.get("/data/list", memeController.getMemes);
 router.post("/data/array", authorize(), memeController.getMemesArr);
