@@ -8,6 +8,6 @@ router.get("/getMemes/:username", authorize(), userController.getUserMemes);
 router.put("/addLike/:id", authorize(), userController.addUserLikedMeme);
 router.put("/removeLike/:id", authorize(), userController.removeUserLikedMeme);
 router.post("/memeLiked/:id", authorize(), userController.isUserLikedMeme);
-router.get("/getLikedMemes/:username", userController.getLikedMemes);
+router.get("/getLikedMemes/:username", authorize(), userController.getLikedMemes);
 
 module.exports = router;

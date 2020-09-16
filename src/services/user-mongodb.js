@@ -146,7 +146,7 @@ exports.getLikedMemes = (username) => {
     db.collection("users")
       .findOne({ username: username })
       .then((user) => {
-        resolve({ liked_memes: user.liked_memes})
+        resolve(user.liked_memes)
       })
       .catch((err) => reject(err.message))
   })

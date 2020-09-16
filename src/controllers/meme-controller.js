@@ -90,3 +90,10 @@ exports.removeMeme = (req, res) => {
     .then((result) => res.json(result))
     .catch((err) => res.status(500).send(err.message));
 };
+
+exports.addComment = (req, res) => {
+  memeService
+    .addComment(req.params.id, req.body.author, req.body.comment)
+    .then((result) => res.json(result))
+    .catch((err) => res.status(500).send(err.message));
+};

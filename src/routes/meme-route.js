@@ -14,5 +14,6 @@ router.post("/vote/dec/:id", authorize(), memeController.decMemeVotes);
 router.get("/vote/get/:id", authorize(), memeController.getMemeVotes);
 router.put("/memage/:id", authorize(), memeController.updateMemage);
 router.delete("/data/:id", authorize(), memeController.removeMeme);
+router.put("/comment/:id", authorize(), memeController.addComment);
 
 module.exports = router;

@@ -22,7 +22,7 @@ exports.getQueryMemes = (queryString) => {
 
 exports.getCategoryMemes = (category) => {
   return new Promise((resolve, reject) => {
-      db.collection("memes")
+    db.collection("memes")
       .find({ category: category })
       .toArray()
       .then((memes) => resolve(memes))
@@ -44,12 +44,12 @@ exports.getMemesArr = (ids) => {
   return new Promise((resolve, reject) => {
     let objids = [];
 
-    ids.forEach(element => {
-      objids.push(ObjectId(element))
+    ids.forEach((element) => {
+      objids.push(ObjectId(element));
     });
 
     db.collection("memes")
-      .find({_id: { $in : objids}})
+      .find({ _id: { $in: objids } })
       .toArray()
       .then((memes) => resolve(memes))
       .catch((err) => reject(err));
@@ -74,6 +74,7 @@ exports.insertMeme = (body) => {
         author: body.author,
         publish: body.publish,
         votes: body.votes,
+        comments: [],
       })
       .then((res) => {
         userService.addUserMeme(body.author, res.insertedId);
@@ -106,10 +107,14 @@ exports.updateMeme = (id, body) => {
 exports.incMemeVotes = (id, body) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
-      .updateOne({ _id: ObjectId(id) }, { $inc : { votes: 1 }, $push : { whoLiked: body.username} })
+      .updateOne(
+        { _id: ObjectId(id) },
+        { $inc: { votes: 1 }, $push: { whoLiked: body.username } }
+      )
       .then(() => {
         userService.addUserLikedMeme(body.username, id);
-        resolve({ updated: 1 })})
+        resolve({ updated: 1 });
+      })
       .catch((err) => reject(err));
   });
 };
@@ -117,10 +122,14 @@ exports.incMemeVotes = (id, body) => {
 exports.decMemeVotes = (id, body) => {
   return new Promise((resolve, reject) => {
     db.collection("memes")
-      .updateOne({ _id: ObjectId(id) }, { $inc: { votes: -1 }, $pull : { whoLiked: body.username} })
+      .updateOne(
+        { _id: ObjectId(id) },
+        { $inc: { votes: -1 }, $pull: { whoLiked: body.username } }
+      )
       .then(() => {
         userService.removeUserLikedMeme(body.username, id);
-        resolve({ updated: 1 })})
+        resolve({ updated: 1 });
+      })
       .catch((err) => reject(err));
   });
 };
@@ -166,6 +175,20 @@ exports.removeMeme = (id) => {
     db.collection("memes")
       .deleteOne({ _id: ObjectId(id) })
       .then(() => resolve({ removed: 1 }))
+      .catch((err) => reject(err));
+  });
+};
+
+exports.addComment = (id, author, comment) => {
+  return new Promise((resolve, reject) => {
+    db.collection("memes")
+      .updateOne(
+        { _id: ObjectId(id) },
+        { $push: { comments: { author: author, comment: comment } } }
+      )
+      .then(() => {
+        resolve({ commentadded: 1 });
+      })
       .catch((err) => reject(err));
   });
 };
