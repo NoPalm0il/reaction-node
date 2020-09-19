@@ -157,10 +157,13 @@ exports.updateMemage = (id, file) => {
         return Promise.all(promises);
       })
       .then(([presignedUrl, deleted]) => {
-        url = presignedUrl;
+        //process.env.MINIO_ENDPOINT + MINIO_PORT esta a dar problemas
+        if(presignedUrl.search("minio:9000") > -1)
+          url = presignedUrl.replace("minio:9000", "localhost:7011");
+        console.log(url);
         return db
           .collection("memes")
-          .updateOne({ _id: ObjectId(id) }, { $set: { memage: presignedUrl } });
+          .updateOne({ _id: ObjectId(id) }, { $set: { memage: url } });
       })
       .then(() => {
         resolve({ updated: 1, url });
